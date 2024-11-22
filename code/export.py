@@ -46,7 +46,9 @@ def reparameterize(config, net, device, save_rep_checkpoint=False):
 
             # second step: merge the first 1x1 convolution and the next 3x3 convolution
             merged_k0k1 = F.conv2d(input=k1, weight=k0.permute(1, 0, 2, 3))
-            merged_b0b1 = b0.view(1, -1, 1, 1) * torch.ones(1, mid_feats, 3, 3).cuda()
+            merged_b0b1 = b0.view(1, -1, 1, 1) * torch.ones(1, mid_feats, 3, 3).to(
+                device
+            )
             merged_b0b1 = F.conv2d(input=merged_b0b1, weight=k1, bias=b1)
 
             # third step: merge the remain 1x1 convolution
@@ -77,7 +79,7 @@ def reparameterize(config, net, device, save_rep_checkpoint=False):
 
 
 def test(config):
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cpu")
 
     net = torch.nn.DataParallel(model.__dict__[config.arch](config)).to(device)
     net = load_checkpoint(net, device, config.checkpoint_id)

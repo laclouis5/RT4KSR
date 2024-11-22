@@ -31,6 +31,8 @@ Install the repository using uv:
 uv sync
 ```
 
+PyTorch 2.5 may not be compatible with Python 3.13 at the time of writing. If an error occurs during installation, switch to Python 3.12 or bellow.
+
 ---
 
 ## Usage

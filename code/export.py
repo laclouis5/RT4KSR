@@ -95,7 +95,7 @@ def test(config):
         torch.onnx.export(
             net.module.cpu(),
             args=(torch.randn(1, 3, 480, 720),),
-            f="models/model_fp32_bs.onnx",
+            f=f"models/{config.checkpoint_id}_fp32.onnx",
             input_names=["input"],
             output_names=["output"],
             opset_version=16,
@@ -105,8 +105,10 @@ def test(config):
             },
         )
 
-        model_fp16 = convert_float_to_float16_model_path("models/model_fp32_bs.onnx")
-        onnx.save_model(model_fp16, "models/model_fp16_bs.onnx")
+        model_fp16 = convert_float_to_float16_model_path(
+            f"models/{config.checkpoint_id}_fp32.onnx"
+        )
+        onnx.save_model(model_fp16, f"models/{config.checkpoint_id}_fp16.onnx")
 
 
 if __name__ == "__main__":

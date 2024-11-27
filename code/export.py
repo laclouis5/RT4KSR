@@ -94,13 +94,13 @@ def test(config):
     with torch.inference_mode():
         torch.onnx.export(
             net.module.cpu(),
-            args=(torch.randn(1, 3, 480, 720),),
+            args=(torch.randn(1, 3, 480, 640),),
             f=f"models/{config.checkpoint_id}_fp32.onnx",
             input_names=["input"],
             output_names=["output"],
             opset_version=16,
             dynamic_axes={
-                "input": {0: "batch_size"},
+                "input": {0: "batch_size", 2: "height", 3: "width"},
                 "output": {0: "batch_size"},
             },
         )

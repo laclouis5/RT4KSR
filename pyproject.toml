@@ -8,6 +8,7 @@ dependencies = [
     "kornia>=0.7.4",
     "matplotlib>=3.9.2",
     "numpy<2.0",
+    "onnx-simplifier>=0.4.36",
     "onnx>=1.17.0",
     "onnxconverter-common>=1.14.0",
     "opencv-python-headless>=4.6.0.66",
@@ -20,4 +21,5 @@ dependencies = [
     "torchvision>=0.20.1",
     "tqdm>=4.67.0",
     "wandb>=0.18.7",
+    "onnxruntime>=1.20.1",
 ]

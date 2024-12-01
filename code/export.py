@@ -5,6 +5,7 @@ from typing import List
 
 import model
 import onnx
+import onnxsim
 import torch
 import torch.nn.functional as F
 from onnxconverter_common import convert_float_to_float16_model_path
@@ -99,16 +100,28 @@ def test(config):
             input_names=["input"],
             output_names=["output"],
             opset_version=16,
-            dynamic_axes={
-                "input": {0: "batch_size", 2: "height", 3: "width"},
-                "output": {0: "batch_size"},
-            },
+            # dynamic_axes={
+            #     "input": {0: "batch_size", 2: "height", 3: "width"},
+            #     "output": {0: "batch_size"},
+            # },
         )
+
+        sim_model_fp32, _ = onnxsim.simplify(
+            model=f"models/{config.checkpoint_id}_fp32.onnx",
+        )
+
+        onnx.save(sim_model_fp32, f=f"models/{config.checkpoint_id}_fp32_sim.onnx")
 
         model_fp16 = convert_float_to_float16_model_path(
             f"models/{config.checkpoint_id}_fp32.onnx"
         )
         onnx.save_model(model_fp16, f"models/{config.checkpoint_id}_fp16.onnx")
+
+        sim_model_fp16, _ = onnxsim.simplify(
+            model=f"models/{config.checkpoint_id}_fp16.onnx",
+        )
+
+        onnx.save(sim_model_fp16, f=f"models/{config.checkpoint_id}_fp16_sim.onnx")
 
 
 if __name__ == "__main__":
